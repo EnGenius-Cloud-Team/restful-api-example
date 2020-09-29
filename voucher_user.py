@@ -2,7 +2,7 @@ import sys
 import requests
 from calendar import timegm
 from datetime import datetime
-
+import os
 '''
   This sample code illustrates how to list, add, modify and delete voucher users by calling EnGenius Cloud API.
   Before running this code, please make sure the following:
