@@ -3,7 +3,7 @@ Documentation: https://liveapi-console-dev.s3-us-west-2.amazonaws.com/engenius_c
 
 ## Requirements
 
-* Python
+* Python 2.x/3.x (Recommend 2.7/3.8)
 
 ## Installation
 
@@ -13,10 +13,16 @@ $ pip install requests
 ## Prerequirement of running voucher_user.py
 Before running voucher_user.py, there are some configurations need to be changed in your Engenius Cloud account
 - Enable the voucher service and manage voucher users from the URL
-![](./media/voucher.jpg)
+<img src="./media/voucher.jpg" width="500"/>
+  
 - Generate and copy your API key 
-![](./media/apikey.jpg)
-- Modify **voucher_user.py**
-![](./media/values.jpg)
+  
+<img src="./media/apikey.jpg" width="500"/>
+  
+- Modify **voucher_user.py**  
+  
+<img src="./media/values.jpg" width="300"/>
+  
 - Run it
-![](./media/result.jpg)
+  
+<img src="./media/result.jpg" width="300"/>
