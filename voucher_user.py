@@ -196,7 +196,7 @@ for user in voucher_user_list:
     print("Expiration Date: {}".format(datetime.utcfromtimestamp(user['expiration_date'] / 1000)))
     print("Simultaneous Login: {}".format(user['access_plan']['simultaneous_use']))
     print("Status: {}".format(user['status']))
-    print("Note: {}".format(user['note']))
+    print("Note: {}".format(user.get('note', "Note is empty")))
 print("==========================================")
 
 # Finally, delete created users before exiting
