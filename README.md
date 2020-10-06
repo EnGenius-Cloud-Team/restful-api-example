@@ -13,16 +13,16 @@ $ pip install requests
 ## Prerequirement of running voucher_user.py
 Before running voucher_user.py, there are some configurations need to be changed in your Engenius Cloud account
 - Enable the voucher service and manage voucher users from the URL
-<img src="./media/voucher.jpg" width="500"/>
+<img src="./media/voucher.jpg" width="600"/>
   
 - Generate and copy your API key 
   
-<img src="./media/apikey.jpg" width="500"/>
+<img src="./media/apikey.jpg" width="600"/>
   
 - Modify **voucher_user.py**  
   
-<img src="./media/values.jpg" width="300"/>
+<img src="./media/values.jpg" width="450"/>
   
 - Run it
   
-<img src="./media/result.jpg" width="300"/>
+<img src="./media/result.jpg" width="450"/>
