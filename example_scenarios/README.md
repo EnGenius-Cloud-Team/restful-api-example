@@ -13,7 +13,10 @@ $ pip install requests
 ## Prerequirement of running sample.py
 Before running sample.py, there are some configurations need to be changed in your Engenius Cloud account
 - Switch to professional license mode 
-<img src="./media/change_license_1.png" width="200"/><img src="./media/change_license_2.png" width="300"/>
+
+<img src="./media/change_license_1.png" height="300"/>
+
+<img src="./media/change_license_2.png" height="300"/>
 
 
 - Generate and copy your API key 
