@@ -23,6 +23,7 @@ headers = {
     "api-key": api_key
 }
 
+# Create the subscription
 
 print("Create Organization")
 create_org_url = base_url + "/orgs"
@@ -174,7 +175,34 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get AP Table and Mesh Link Signal Strength")
+print("Create Mypsk users")
+create_my_psk_users_url = base_url + "/orgs/{}/hvs/{}/networks/{}/engenius-mypsk-users".format(org_id, hv_id, network_id)
+body = {
+        "is_auto_gen": True,
+        "vlan_id": 0,     # 0 means vlan_id represents by ssid
+        "expiration_date": 1624428706403,    # None is means permanent
+        "authorizations": [ssid_profile_id],
+        "passphrase_count": 2,  # auto gen count
+        "passphrase_length": 8
+}
+try:
+    response = requests.post(create_my_psk_users_url, headers=headers, json=body)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+my_psk_users = response.json().get("mypsk_users")
+my_psk_user_ids = []
+for my_psk_user_inner in my_psk_users:
+    my_psk_user_ids.append(my_psk_user_inner.get("id"))
+
+
+# Check Subscription Status
+
+print("Get AP Table and Mesh Link Signal Strength")
 get_ap_table_url = base_url + "/orgs/{}/hvs/{}/networks/{}/devices/aps".format(org_id, hv_id, network_id)
 try:
     response = requests.get(get_ap_table_url, headers=headers)
@@ -186,7 +214,7 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get SSID Profiles")
+print("Get SSID Profiles")
 get_ssid_profiles_url = base_url + "/orgs/{}/hvs/{}/networks/{}/policy/aps/ssid-profiles".format(org_id, hv_id, network_id)
 try:
     response = requests.get(get_ssid_profiles_url, headers=headers)
@@ -198,7 +226,19 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get SSID Number of Clients")
+print("Get Mypsk Users")
+get_my_psk_users_url = base_url + "/orgs/{}/hvs/{}/networks/{}/engenius-mypsk-users".format(org_id, hv_id, network_id)
+try:
+    response = requests.get(get_my_psk_users_url, headers=headers)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+
+print("Get SSID Number of Clients")
 get_ssid_clients_url = base_url + "/orgs/{}/hvs/{}/networks/{}/statistics/ssids".format(org_id, hv_id, network_id)
 payload = {"ssid_ids": str([ssid_id])}
 try:
@@ -211,7 +251,7 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get Client Ban List")
+print("Get Client Ban List")
 get_client_ban_list_url = base_url + "/orgs/{}/hvs/{}/networks/{}/policy/aps/acls/clients".format(org_id, hv_id, network_id)
 payload = {"access": "block"}
 try:
@@ -224,7 +264,7 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get Network APs Status and Clients Count")
+print("Get Network APs Status and Clients Count")
 get_ap_status_url = base_url + "/orgs/{}/hvs/{}/networks/{}/radars".format(org_id, hv_id, network_id)
 try:
     response = requests.get(get_ap_status_url, headers=headers)
@@ -236,7 +276,7 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get Client Table")
+print("Get Client Table")
 get_clients_url = base_url + "/orgs/{}/hvs/{}/networks/{}/statistics/clients".format(org_id, hv_id, network_id)
 try:
     response = requests.get(get_clients_url, headers=headers)
@@ -247,6 +287,8 @@ except Exception as e:
     print(e)
     sys.exit(0)
 
+
+# Subscription Changes
 
 print("Change SSID Name and Password")
 patch_ssid_url = base_url + "/orgs/{}/hvs/{}/networks/{}/policy/aps/ssid-profiles/{}".format(org_id, hv_id, network_id, ssid_profile_id)
@@ -261,6 +303,22 @@ body = {
 }
 try:
     response = requests.patch(patch_ssid_url, headers=headers, json=body)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+
+print("Change Mypsk Users status to Disabled")
+patch_my_psk_users_url = base_url + "/orgs/{}/hvs/{}/networks/{}/engenius-mypsk-users".format(org_id, hv_id, network_id)
+body = {
+    "ids": my_psk_user_ids,
+    "status": "disabled"
+}
+try:
+    response = requests.patch(patch_my_psk_users_url, headers=headers, json=body)
     if response.status_code >= 300:
         print(response.text)
         sys.exit(0)
@@ -293,7 +351,7 @@ except Exception as e:
     sys.exit(0)
 
 
-print("AP Reboot")
+print("AP Reboot")
 ap_reboot_url = base_url + "/orgs/{}/hvs/{}/networks/{}/devices/{}/reboot".format(org_id, hv_id, network_id, device_id)
 try:
     response = requests.get(ap_reboot_url, headers=headers)
@@ -383,6 +441,8 @@ except Exception as e:
     sys.exit(0)
 
 
+# Add AP
+
 print("Add AP to Inventory")
 add_inventory_url = base_url + "/orgs/{}/inventory".format(org_id)
 body = [
@@ -419,6 +479,8 @@ except Exception as e:
     sys.exit(0)
 
 
+# Remove AP
+
 print("Release AP to Inventory")
 remove_ap_url = base_url + "/orgs/{}/hvs/{}/networks/{}/devices/{}".format(org_id, hv_id, network_id, device_id)
 try:
@@ -431,7 +493,9 @@ except Exception as e:
     sys.exit(0)
 
 
-print("Get AP List")
+# Remove the Subscription
+
+print("Get AP List")
 get_ap_list_url = base_url + "/orgs/{}/hvs/{}/networks/{}/devices/aps".format(org_id, hv_id, network_id)
 try:
     response = requests.get(get_ap_list_url, headers=headers)
@@ -459,6 +523,18 @@ for ap in ap_list:
         sys.exit(0)
 
 
+print("Remove device from Inventory")
+remove_device_from_inventory_url = base_url + "/orgs/{}/inventory/{}".format(org_id, device_id)
+try:
+    response = requests.delete(remove_device_from_inventory_url, headers=headers)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+
 print("Empty network - name appended  \"- Disconnected\"")
 rename_network_url = base_url + "/orgs/{}/hvs/{}/networks/{}".format(org_id, hv_id, network_id)
 body = {
@@ -466,6 +542,31 @@ body = {
 }
 try:
     response = requests.patch(rename_network_url, headers=headers, json=body)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+
+print("Remove mypsk users from Network")
+remove_mypsk_users_url = base_url + "/orgs/{}/hvs/{}/networks/{}/engenius-mypsk-users".format(org_id, hv_id, network_id)
+body = my_psk_user_ids
+try:
+    response = requests.delete(remove_mypsk_users_url, headers=headers, json=body)
+    if response.status_code >= 300:
+        print(response.text)
+        sys.exit(0)
+except Exception as e:
+    print(e)
+    sys.exit(0)
+
+
+print("Remove Netwok from Org")
+remove_network_url = base_url + "/orgs/{}/hvs/{}/networks/{}".format(org_id, hv_id, network_id)
+try:
+    response = requests.delete(remove_network_url, headers=headers)
     if response.status_code >= 300:
         print(response.text)
         sys.exit(0)
