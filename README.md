@@ -7,22 +7,34 @@ Documentation: https://liveapi-console-dev.s3-us-west-2.amazonaws.com/engenius_c
 
 ## Installation
 
-```console
-$ pip install requests
 ```
-## Prerequirement of running voucher_user.py
-Before running voucher_user.py, there are some configurations need to be changed in your Engenius Cloud account
-- Enable the voucher service and manage voucher users from the URL
-<img src="./media/voucher.jpg" width="600"/>
+$ pip install -r requirements.txt
+```
+
+## Prerequirement of running sample.py
+Before running sample.py, there are some configurations need to be changed in your EnGenius Cloud account
   
-- Generate and copy your API key 
+- Generate and copy your API key
   
-<img src="./media/apikey.jpg" width="600"/>
+<img src="./media/apikey.png" width="600"/>
+
+- Modify **sample.py**
   
-- Modify **voucher_user.py**  
-  
-<img src="./media/values.jpg" width="450"/>
+```python
+# Modify the following values with yours.
+api_key = "YOUR_APIKEY"               # The API Key of the account
+org_name = "Test Org"                 # The organization of the account
+hv_name = "Test HV"                   # The hierarchy view of the organization
+network_name = "Test Network"         # The network of the hierarchy view
+serial_number = "YOUR_SERIAL_NUMBER"  # The serial number of the device
+ssid_name = "Test SSID"               # The SSID of the network
+client_mac = "YOUR_CLIENT_MAC"        # The mac of the client
+```
   
 - Run it
+
+```
+$ python sample.py
+```
   
-<img src="./media/result.jpg" width="450"/>
+<img src="./media/result.png" width="600"/>
