@@ -1,5 +1,8 @@
 # EnGenius Cloud RESTful API
 Documentation: https://liveapi-console-dev.s3-us-west-2.amazonaws.com/engenius_cloud/falcon.html
+Note: To call the API, it is necessary to set the feature plan for the API's corresponding device type to Pro; otherwise, the server will return a status code of 402. 
+
+The documentation categorizes APIs into five groups: General, AP, Switch, Gateway, and PDU. Each group corresponds to a specific device type, requiring a Pro feature plan for access. The APIs under the "General" category are accessible with any type of Pro feature plan.
 
 ## Requirements
 
