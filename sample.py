@@ -491,6 +491,16 @@ print("Delete the voucher user for EnGenius Cloud RADIUS of the SSID in the netw
 delete_voucher_user_url = base_url + "/orgs/{}/hvs/{}/networks/{}/ssid-profiles/{}/engenius-radius-users/{}".format(org_id, hv_id, network_id, ssid_profile_id, engenius_voucher_user_id)
 response = send_request("DELETE", delete_voucher_user_url, request_headers=headers)
 
+print("Create a EnGenius General Radius User for specific network")
+create_general_user_url = base_url + "/orgs/{}/hvs/{}/networks/{}/engenius-radius-users".format(org_id, hv_id, network_id)
+body = {
+    "name": "general_user_name",
+    "email": "general_user1@senao.com",
+    "password": "password",
+    "description": "description",
+    "authorizations": [ssid_profile_id]
+}
+response = send_request("POST", create_general_user_url, request_headers=headers, json=body)
 
 print("Delete the SSID profile in the network")
 delete_ssid_url = base_url + "/orgs/{}/hvs/{}/networks/{}/policy/aps/ssid-profiles/{}".format(org_id, hv_id, network_id, ssid_profile_id)
